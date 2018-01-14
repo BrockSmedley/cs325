@@ -1,4 +1,4 @@
-# hw1 - mergesort
+# hw1 - merge sort
 # Brock Smedley
 
 # receives array with indices representing two halves
