@@ -33,7 +33,7 @@ def cutRodAux(p,n,r):
     else:
         q = -sys.maxsize-1
         for i in range(n):
-            q = max(q, p[i] + cutRodAux(p, n-i-1, r))
+            q = max(q, p[i % len(p)] + cutRodAux(p, n-i-1, r))
     r[n-1] = q
     return q
 
@@ -48,7 +48,8 @@ def cutRodBU(p,n):
         q = -sys.maxsize-1
         for i in range(1,j+1):
             #print "i: %d\nj: %d\n" % (i-1, j-1)
-            q = max(q, p[i-1] + r[j-i-1])
+            iadj = i % len(p)
+            q = max(q, p[iadj-1] + r[j-iadj-1])
         r[j-1] = q
         #print r
     return r[n-1]
@@ -56,7 +57,7 @@ def cutRodBU(p,n):
 
 def test():
     p = [1,5,8,9,10,17,17,20,24,30]
-    n = 8
+    n = 10
 
     print cutRodNaive(p,n)
     print cutRod(p,n)
