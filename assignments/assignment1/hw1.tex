@@ -9,6 +9,8 @@
 \usepackage{amsmath}
 \usepackage{mathtools}
 
+\graphicspath{ {testing/images/} }
+
 \author{Brock Smedley}
 \title{CS325 Assignment 1}
 
@@ -43,7 +45,7 @@
 	
 	I believe the worst case running time for this algorithm is $O(3/2n)$ where X is a constant less than $3/2$. The only way one could incur this many operations is for the algorithm to make n comparisons, half of which result in the first element being re-appended while the last element is deleted, effectively keeping S the same size (unless the first element hasn't been previously deleted). Because S is sorted, the algorithm is only able to do this once for every other element (worst-case) because if we have to re-add the first element, we can be guaranteed that our sum was too high. If we only ever get sums that are too low, we'll finish the operation in n iterations. If we only ever get sums that are too high, we'll do the same. But if we go back and forth between low and high at every iteration, then every other iteration leaves the size the same as the last iteration. As a result, in this case the size of S decreases by 1 every other iteration. So in this special case, we add n/2 operations to our base count of n iterations, which we know has to happen to cover all possible pairs with the first element.
 	\\
-	Regardless of how much computing time this algorithm takes, it is still linear, and less than nlogn, which is the running time of a merge sort. Therefore, we simply take O(nlogn) to be our final running time, which we can call $\Theta$(nlogn) because we know that our sub-algorithm is linear and the runtime depends most on the merge sort, the running time of which is easy to predict. Our bounds c1 and c2 would be defined by the minimum and maximum runtime of our sub-algorithm: $\Omega$(1)*(logn) and O(3n/2)*(logn).
+	Regardless of how much computing time this algorithm takes, it is still linear, and less than nlogn, which is the running time of a merge sort. Therefore, we simply take O(nlogn) to be our final running time, which we can call $\Theta$(nlogn) because we know that our sub-algorithm is linear and the runtime depends most on the merge sort, the running time of which is easy to predict. Our bounds c1 and c2 would be defined by the minimum and maximum runtime of our sub-algorithm: $\Omega$(1)*(nlogn) and O(3/2)*(logn).
 	\\
 	\newpage
 	The following code implements the algorithm in Python:
@@ -140,14 +142,177 @@ def checkSum(S,x,h):
 		$g_1(n) = log(n^2)$\\
 		$g_2(n) = n^2$
 		
-		For $g_1(n)$ to be $\Theta(g_2(n))$ it must be $\Omega(g_2(n))$ and $O(g_2(n))$. $g_1$ cannot be $\Omega(g(n))$ so therefore it cannot be $\Theta(g(n))$.
+		For $g_1(n)$ to be $\Theta(g_2(n))$ it must be $\Omega(g_2(n))$ and $O(g_2(n))$. $g_1$ cannot be $\Omega(g(n))$ so therefore it cannot be $\Theta(g(n)) _\square$
 
 		
 		
 	\end{enumerate}
 
+
+	\newpage
+	\section*{5}
+	\begin{enumerate}
+		\item[(a,b)] 
+		\begin{lstlisting}
+			# hw1 - insertion sort
+			# Brock Smedley
+			
+			from random import *
+			import time
+			
+			
+			def isort(dArr):
+			for i in range(1,len(dArr)):
+			focus = dArr[i]
+			
+			# shift other elements (> focus)
+			k = i - 1
+			while (k >= 0 and focus < dArr[k]):
+			dArr[k + 1] = dArr[k]
+			k = k - 1
+			
+			dArr[k + 1] = focus
+			
+			return dArr
+			
+			
+			# generates random data to be sorted
+			def readData(n):
+			arr = []
+			for i in range(n):
+			arr.append(randint(0,10000))
+			
+			return arr
+			
+			
+			def main():
+			# generate data
+			sizes = [1000, 2000, 5000, 10000, 25000, 50000]
+			for s in sizes:
+			data = readData(s)
+			
+			# sort it
+			startTime = time.time()
+			data = isort(data)
+			endTime = time.time()
+			
+			print ("running time %s items: %s s" % (s, (endTime - startTime)))
+			
+			
+			main()
+			
+			# Thank you to Mohit Kumra			
+		\end{lstlisting}
+
+		\newpage
+		\begin{lstlisting}
+			# hw1 - merge sort
+			# Brock Smedley
+			
+			from random import *
+			import time
+			
+			# receives array with indices representing two halves
+			# a: start half1
+			# b: end half1
+			# c: end half2
+			def merge(dArray, left, mid, right):
+			x = mid - left + 1
+			y = right - mid
+			
+			# temporary arrays; fill with data from dArray
+			leftArr = []
+			rightArr = []
+			for i in range(x):
+			leftArr.append(dArray[left + i])
+			for j in range(y):
+			rightArr.append(dArray[mid + 1 + j])
+			
+			# merge temporary arrays back into original array
+			i = 0
+			j = 0
+			t = left
+			
+			while (i < x and j < y):
+			if leftArr[i] <= rightArr[j]:
+			dArray[t] = leftArr[i]
+			i = i + 1
+			else:
+			dArray[t] = rightArr[j]
+			j = j + 1
+			t = t + 1
+			
+			# get rest of leftArr
+			while (i < x):
+			dArray[t] = leftArr[i]
+			i = i + 1
+			t = t + 1
+			
+			# get rest of rightArr
+			while (j < y):
+			dArray[t] = rightArr[j]
+			j = j + 1
+			t = t + 1
+			
+			
+			# dArray: array of data to sort
+			# left: index of left edge
+			# right: "      " right ""
+			# returns sorted array
+			def mergesort(dArray, left, right):
+			if (left < right):
+			mid = (left + right) / 2
+			
+			# sort halves recursively
+			mergesort(dArray, left, mid) # left half
+			mergesort(dArray, mid + 1, right) # right half
+			merge(dArray, left, mid, right) # merge sorted halves
+			
+			return dArray
+			
+			
+			# generates random data to be sorted
+			def readData(n):
+			arr = []
+			for i in range(n):
+			arr.append(randint(0,10000))
+			
+			return arr
+			
+			
+			
+			def main():
+			# generate data
+			sizes = [1000, 2000, 5000, 10000, 25000, 50000]
+			for s in sizes:
+			data = readData(s)
+			
+			# sort it
+			startTime = time.time()
+			data = mergesort(data, 0, len(data)-1)
+			endTime = time.time()
+			
+			print ("running time %s items: %s s" % (s, (endTime - startTime)))
+			
+			
+			main()
+			
+			# Thank you to Mohit Kumra
+		\end{lstlisting}
+		
+		\item[(c)]
+		
+		\includegraphics[scale=0.6]{sbs.png}
+		
+		\includegraphics[scale=0.6]{overlay.png}
+		
+		The charts with individual graphs show the details of the data the best, but the overlaid graph very clearly illustrates the difference in running time.
+		
+		\item[(d)] Linear was the best fit for merge sort; it is $O(nlogn)$ so it makes sense for a trial with high numbers (50,000). You can see the logarithmic properties earlier in the curve but as n increases, it gets increasingly linear. As for insertion sort, it was clearly polynomial (to the second degree).
+		
+		\item[(e)] The average running times were similar to what I predicted they would be. Just by looking at the curve you can see how the algorithm works. I wasn't expecting such a long wait time for insertion sort with 50K elements, but it's not really surprising when you realize that insertion sort is a $O(n^2)$.
+	\end{enumerate}
 	
-	\section*{4}
 	
 	
 \end{document}

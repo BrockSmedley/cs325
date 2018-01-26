@@ -1,6 +1,8 @@
 # hw1 - merge sort
 # Brock Smedley
 
+from random import *
+import time
 
 # receives array with indices representing two halves
 # a: start half1
@@ -23,6 +25,7 @@ def merge(dArray, left, mid, right):
     j = 0
     t = left
 
+    # sort
     while (i < x and j < y):
         if leftArr[i] <= rightArr[j]:
             dArray[t] = leftArr[i]
@@ -59,54 +62,31 @@ def mergesort(dArray, left, right):
         merge(dArray, left, mid, right) # merge sorted halves
 
     return dArray
-
-# receives array of arrays of data to be sorted
-def sortArrays(data):
-    for a in range(len(data)):
-        data[a] = mergesort(data[a], 0, len(data[a]) - 1)
-    return data
         
 
-def readData(filename):
-    f = open(filename, "r")
-    data = []
+# generates random data to be sorted
+def readData(n):
+    arr = []
+    for i in range(n):
+        arr.append(randint(0,10000))
 
-    i = 0
-    for l in f:
-        j = 0
-        data.append([])
-        for w in l:
-            if (j != 0):
-                if (w != ' ' and w != '\n'):
-                    data[i].append(w)
-            j = j + 1
-        i = i + 1
+    return arr
 
-    return data
-
-
-def writeData(data, filename):
-    f = open(filename, "w")
-    for r in data:
-        for i in r:
-            f.write(str(i))
-            f.write(' ')
-        f.write("\n")
-
-    f.close()
 
 
 def main():
-    # read data from file data.txt
-    data = readData("data.txt")
-    
-    # sort it
-    #print data
-    data = sortArrays(data)
-    #print data
-    
-    # write output to merge.out
-    writeData(data, "merge.out")
+    # generate data
+    sizes = [1000, 2000, 5000, 10000, 25000, 50000]
+    for s in sizes:
+        data = readData(s)
+        
+        # sort it
+        startTime = time.time()
+        data = mergesort(data, 0, len(data)-1)
+        endTime = time.time()
+
+        print ("running time %s items: %s s" % (s, (endTime - startTime)))
+
 
 main()
 

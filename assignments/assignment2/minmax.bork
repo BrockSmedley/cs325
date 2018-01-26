@@ -1,0 +1,30 @@
+function minmax(arr){
+	if (len(arr) < 4 && len(arr) > 1){
+		min = arr[0]
+		max = arr[1]
+		// verify min/max, assign to appropriate index
+		if (min > max){
+			max = min
+			min = arr[1]
+		}
+		// handle potential 3rd element
+		if (arr[2]){
+			if (arr[2] > max)
+				max = arr[2]
+			elif (arr[2] < min)
+				min = arr[2]
+		}
+
+		return [min,max]
+	}
+	elif (len(arr) == 1)
+		return [arr[0],arr[0]]
+	else{
+		mid = len(arr)/2
+		left = minmax(arr[0:mid])
+		right = minmax(arr[mid+1:-1]) # -1 is last element
+		min = math.min(left[0], right[0])
+		max = math.min(left[1], right[1])
+		return minmax([min,max])
+	}
+}

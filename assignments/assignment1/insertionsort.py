@@ -58,9 +58,9 @@ def main():
     data = readData("data.txt")
     
     # sort it
-    print data
+    #print data
     data = sortArrays(data)
-    print data
+    #print data
     
     # write output to merge.out
     writeData(data, "insert.out")

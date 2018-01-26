@@ -1,0 +1,30 @@
+# returns index of element in arr equal to x
+function qSearch(arr, left, right, x){
+	# base case: (sub)array down to 4 or less elements
+	if (right-left < 4){
+		# check elements of arr[left:right] for x
+		for i in range(left, right){
+			if (arr[i] == x)
+				return i
+		}
+
+		return -1 # didn't find element
+	}
+
+	# recursive case: split array into 4 pieces
+	# assume integer division (floor) to calculate indices
+	mid = l + (right-left)/2
+	ml = (mid - left)/2
+	mr = (right - mid)/2 + mid
+	
+	# store indices for later iteration
+	indices = [left, ml, mid, mr, right]
+	
+	# find subarray containing x; scan boundary ahead for n > x
+	for i in range(len(indices)-1){
+		if (arr[indices[i+1]] >= x) # x should be in this subarray
+			return qSearch(arr, indices[i], indices[i+1], x)
+	}
+	
+	return -1 # element not in any subarray
+}
