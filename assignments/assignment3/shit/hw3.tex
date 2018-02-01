@@ -1,0 +1,93 @@
+\documentclass[10pt,a4paper]{report}
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{listings}
+\author{Brock Smedley}
+\title{CS325 HW3}
+\begin{document}
+	\maketitle
+	
+	\section*{1. Rod Cutting}
+	Consider a rod of length $n = 16$. Use the following table for cut prices.
+	
+	\begin{center}
+		\begin{tabular}{ c c c }
+			profit	& length 	& density \\ 
+			15	 	& 5		 	& 0.33 \\  
+			14 		& 4 		& 0.29
+		\end{tabular}
+	\end{center}
+	
+	A greedy algorithm would cut a rod of length 16 into three pieces length 5 and one piece length 1, for a sum profit of 46. This is not the optimal solution, as four cuts of length 4 would give a sum profit of 56. Even though the density of a length-4 cut is lower than that of a length-5 cut, the greedy algorithm misses out on some extra profit for making density its primary concern.
+	
+	
+	\section*{2. Modified Rod Cutting}
+	This implementation makes use of the memoization-based implementation of the rod-cutting algorithm. To incorporate a fixed cost per cut, we simply add the cost c to the equation in the comparison (inside the for loop) between the current profit q and the potential profit of a new cut.
+	\\
+		
+	\begin{lstlisting}[tabsize=4, mathescape=true]
+def rodCut(p,n,r):
+	if (r[n] >= 0):
+		return r[n]
+	if (n == 0):
+		q = 0
+	else:
+		q = -$\infty$
+		for i = 1 to n:
+			q = max(q, p[i] + cutRod(p,n-i,r) - c)
+	r[n] = q
+	
+	return q
+
+	\end{lstlisting}
+	
+	\newpage
+	\section*{3. Product Sum}
+	\paragraph*{a.} Product Sum of [2, 1, 3, 5, 1, 4, 2].
+	\\
+	
+	$\boldsymbol{27}$
+	\\
+	
+	We do not multiply by 1 because we would rather add the one for an extra unit to the sum.
+	
+	\paragraph*{b.} Dynamic programming optimization formula for product sum of first j elements. (in array A).
+	\\
+	OPT[j] = max(A[i]*A[j], A[i] + A[j]).
+	
+	\paragraph*{c.} This algorithm will run in O(n$^2$) time.
+	
+	\newpage
+	\section*{4}
+	\paragraph*{a.}
+	This implementation of the algorithm stores every value possible for each denomination (coin) into a table M. M is a 2D array whose width is the length of V and also bound by the length of V.
+	
+	The algorithm iterates through the table in a zig-zag fashion, starting at the most valuable denomination of the lowest value. We follow the path of highest profit by starting with the cheapest multiples and working our way up.
+	
+	The problem I ran into while developing this algorithm was that it doesn't track back -- if you end up at a number that doesn't make perfect change, you have to remove one or more of the elements that you've already chosen. Unfortunately I didn't have enough time to finish fleshing the algorithm out before I had to turn it in, but the concept is there.
+	
+	
+	\paragraph*{b.}
+	The theoretical running time of this algorithm is, I believe, n$^2$. One n because it has to calculate a price for each denomination, and another because it then picks through the table size n$^2$ to find the optimal solution.
+	
+	
+	
+	
+	\begin{lstlisting}[tabsize=4]
+
+	
+	
+	
+	\end{lstlisting}
+
+	
+	
+	
+
+	
+
+	
+\end{document}

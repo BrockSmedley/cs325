@@ -1,0 +1,87 @@
+# most_change.py
+# Brock Smedley
+
+
+# builds "multiple" cost table from A and V
+# V assumed to be taken in lo-hi order
+def buildTable(A, V):
+    M = []
+    for v in V:
+        ps = []
+        s = 0
+        n = A / V[-1]
+        for i in range(n+2):
+            ps.append(s * v)
+            s += 1
+        M.append(ps)
+    return M
+
+
+def printTable(M):
+    for v in M:
+        print v
+
+
+# computes maximum number of coin things that could be selected
+# to add up to A
+def transverse(table, C, A):
+    cl = len(C)
+    i = cl-1        # denomination iterator
+    j = 0           # depth/multiple iterator
+    s = 0           # running sum; only updates on "i jumps" (as does D)
+    D = []          # renamed C
+
+    # assume table is organized in ascending order in both dimensions
+    while (i >= 0): # iterate over i in descending order
+        j = 0
+        while (j < cl+1):
+            if (s + table[i][j+1] < A): # potential component found, continue
+                j += 1
+            else: # too high. jump to next denomination
+                D.append((i, j))
+                s += table[i][j]
+                i -= 1
+                break
+
+    # get sum m from D
+    m = 0
+    for d in D:
+        m += d[1]
+        
+    return (D, m)
+
+
+# computes optimal change (like Obama)
+def change(A, V):
+    table = buildTable(A,V)
+
+    # array of denomination multiple counts
+    C = len(V)*[0]
+    D = transverse(table, C, A)
+
+    return D    
+           
+
+def printChange(change, values, full=False):
+    C = change[0] # list of (tuples containing) # of multiples (and indices)
+    m = change[1] # m.
+
+    if (full):
+        print "C: %s"%C
+    print "m: %d"%m
+
+    for t in C:
+        print "%dx $%d"%(t[1], values[t[0]])
+
+    
+def test():
+    A = 33
+    V = [3,4,10]
+
+    table = buildTable(A,V)
+    printTable(table)
+
+    ch = change(A,V)
+    printChange(ch, V, True)
+
+test()
